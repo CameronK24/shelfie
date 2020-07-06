@@ -10,6 +10,17 @@ module.exports = {
                 res.status(500).send(err);
             });
     },
+    getItem: (req, res) => {
+        const db = req.app.get('db');
+
+        const {id} = req.params;
+
+        db.read_item(id)
+            .then(product => {
+                res.status(200).send(product[0]);
+            })
+            .catch(err => res.status(500).send(err));
+    },
     postInventory: (req, res) => {
         const db = req.app.get('db');
 
@@ -40,7 +51,7 @@ module.exports = {
     },
     putInventory: (req, res) => {
         const db = req.app.get('db');
-        
+
         const {id} = req.params;
         const {name, price, imgUrl} = req.body;
 

@@ -1,27 +1,50 @@
 import React, {Component} from 'react';
 import Product from '../Product/Product';
-import { isCompositeComponent } from 'react-dom/test-utils';
 import axios from 'axios';
 
 class Dashboard extends Component {
+    constructor() {
+        super()
+        this.state = {
+            items: [],
+            currentItem: {}
+        }
+    }
+
+    componentDidMount() {
+        this.getInventory();
+    }
+
+    storeProduct = (itemToEdit) => {
+    // console.log(itemToEdit);
+        this.setState({currentItem: itemToEdit})
+    }
+
+    getInventory = () => {
+        axios.get('/api/inventory')
+            .then(res => {
+            this.setState({items: res.data});
+            })
+            .catch(err => console.log(err));
+    }
 
     deleteInventory = (id) => {
         axios.delete(`/api/inventory/${id}`)
             .then(res => {
-                this.props.getInventoryFn();
+                this.getInventory();
             })
             .catch(err => console.log(err));
     }
 
     getCurrentItem = (itemToUpdate) => {
-        this.props.storeProductFn(itemToUpdate);
+        this.storeProduct(itemToUpdate);
     }
 
     render() {
-        // console.log(this.props.items);
+        // console.log(this.state.items);
         // let productsArr = [];
         // productsArr[itemOne, itemTwo, itemThree] = this.props.items;
-        const products = this.props.items.map((item, index) => (
+        const products = this.state.items.map((item, index) => (
             <Product key={index} item={item} deleteInventoryFn={this.deleteInventory} getCurrentItemFn={this.getCurrentItem} />
         ));
         return (
