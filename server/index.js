@@ -20,5 +20,8 @@ massive({
 }).catch(err => console.log(err));
 
 app.get('/api/inventory', controller.getInventory);
+app.post('/api/inventory', controller.postInventory);
+app.delete('/api/inventory/:id', controller.deleteInventory);
+app.put('/api/inventory/:id', controller.putInventory);
 
 app.listen(SERVER_PORT, () => console.log(`Listening on port ${SERVER_PORT}`));
